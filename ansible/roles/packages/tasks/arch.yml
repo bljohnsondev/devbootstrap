@@ -1,6 +1,6 @@
 ---
-- name: "[Arch Linux] Install term packages"
-  become: yes
+- name: "Arch Linux : Install term packages"
+  become: true
   community.general.pacman:
     name:
       - bat
@@ -29,11 +29,11 @@
       - zsh
     state: present
 
-- name: "[Arch Linux] Install GUI packages"
-  become: yes
+- name: "Arch Linux : Install GUI packages"
+  become: true
   community.general.pacman:
     name:
       - alacritty
       - xclip
     state: present
-  when: ansible_distribution == "Archlinux" and "xorg-server" in ansible_facts.packages
+  when: "'xorg-server' in ansible_facts.packages"

@@ -1,21 +1,18 @@
 ---
-- name: "[Debian] Install term packages"
-  become: yes
-  community.general.pacman:
+- name: "Debian : Install term packages"
+  become: true
+  ansible.builtin.apt:
     name:
       - bat
       - curl
       - duf
-      # - eza # not in debian
       - fd-find
       - gcc # required for neovim/Mason
       - gpg
       - htop
       - jq
-      # - lazygit # not in debian
       - most
       - ncdu
-      - neovim
       - rclone
       - ripgrep
       - rsync
@@ -23,15 +20,21 @@
       - sshfs
       - tldr
       - tmux
-      # - ttf-firacode-nerd # not in debian
       - unzip
       - wget
       - zip
       - zsh
     state: present
 
-- name: "[Debian] Install EZA (ls replacement)"
-  become: yes
+##### EZA ######
+
+- name: "Debian : EZA key exists"
+  ansible.builtin.stat:
+    path: "/etc/apt/keyrings/gierens.gpg"
+  register: ezakey
+
+- name: "Debian : Install EZA (ls replacement)"
+  become: true
   shell: |
     sudo mkdir -p /etc/apt/keyrings
     wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
@@ -39,11 +42,69 @@
     sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
     sudo apt update
     sudo apt install -y eza
+  when: not ezakey.stat.exists
 
-- name: "[Debian] Install GUI packages"
-  become: yes
-  community.general.pacman:
+##### FIRA CODE ######
+
+- name: "Debian : Check if FiraCode font exists"
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/share/fonts/FiraCodeNerdFont-Regular.ttf"
+  register: fira
+
+- name: "Debian : Create font directory"
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/share/fonts"
+    state: directory
+  when: not fira.stat.exists
+
+- name: "Debian : FiraCode download"
+  ansible.builtin.unarchive:
+    src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.0/FiraCode.zip
+    dest: "{{ ansible_env.HOME }}/.local/share/fonts"
+    remote_src: yes
+  when: not fira.stat.exists
+
+- name: "Debian : Reload font cache"
+  shell: fc-cache -fv
+  when: not fira.stat.exists
+
+##### NEOVIM ######
+
+- name: "Debian : Check if Neovim is installed"
+  ansible.builtin.stat:
+    path: "/opt/nvim"
+  register: nvim
+
+- name: "Debian : Install Neovim"
+  become: true
+  shell: |
+    curl -o /tmp/neovim.tar.gz -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+    tar -C /opt -xzf /tmp/neovim.tar.gz
+    rm -f /tmp/neovim.tar.gz
+    mv /opt/nvim-linux64 /opt/nvim
+  when: not nvim.stat.exists
+
+  ##### LAZYGIT #####
+  
+- name: "Debian : Check if Lazygit is installed"
+  ansible.builtin.stat:
+    path: "/usr/bin/lazygit"
+  register: lazygit
+
+- name: "Debian : Install Lazygit"
+  become: true
+  shell: |
+    curl -o /tmp/lazygit.tar.gz -LO https://github.com/jesseduffield/lazygit/releases/download/v0.41.0/lazygit_0.41.0_Linux_x86_64.tar.gz
+    tar -C /usr/bin -xzf /tmp/lazygit.tar.gz lazygit
+    rm -f /tmp/lazygit.tar.gz
+  when: not lazygit.stat.exists
+
+# NOTE - DONT INSTALL GUI FOR NO X11!
+- name: "Debian : Install GUI packages"
+  become: true
+  ansible.builtin.apt:
     name:
       - alacritty
       - xclip
     state: present
+  when: "'xorg-server' in ansible_facts.packages"
