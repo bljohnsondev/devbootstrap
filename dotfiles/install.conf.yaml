@@ -1,0 +1,21 @@
+- defaults:
+    link:
+        create: true
+        relink: true
+
+- clean: ['~', '~/.config']
+
+- link:
+    ~/.zshrc: zshrc
+    ~/.config/tmux/tmux.conf: tmux.conf
+    ~/.config/alacritty:
+        create: true
+        path: alacritty
+    ~/.config/nvim:
+        create: true
+        path: nvim
+    ~/.config/zsh:
+        create: true
+        path: zsh
+
+- shell: []

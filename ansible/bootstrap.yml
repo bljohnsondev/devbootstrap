@@ -1,0 +1,110 @@
+- name: Bootstrap development environment
+  hosts: localhost
+ 
+  tasks:
+  - name: Gather the package facts
+    ansible.builtin.package_facts:
+      manager: auto
+
+  - name: Install term based packages for Arch Linux
+    become: yes
+    community.general.pacman:
+      name:
+        - bat
+        - curl
+        - duf
+        - dysk
+        - eza
+        - fd
+        - htop
+        - jq
+        - lazygit
+        - most
+        - ncdu
+        - neovim
+        - rclone
+        - ripgrep
+        - rsync
+        - smartmontools
+        - sshfs
+        - tldr
+        - tmux
+        - ttf-firacode-nerd
+        - unzip
+        - wget
+        - zip
+        - zsh
+      state: present
+    when: ansible_distribution == "Archlinux"
+
+  - name: Install GUI based packages for Arch Linux
+    become: yes
+    community.general.pacman:
+      name:
+        - alacritty
+        - xclip
+      state: present
+    when: ansible_distribution == "Archlinux" and "xorg-server" in ansible_facts.packages
+
+  - name: Set login shell of user {{ ansible_env.USER }} to `/bin/zsh`
+    ansible.builtin.command: usermod --shell /bin/zsh {{ ansible_env.USER }}
+    become: true
+    changed_when: false
+
+  - name: Get stats on ohmyzsh
+    ansible.builtin.stat:
+      path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    register: omzst
+
+  - name: Download ohmyzsh installer
+    get_url:
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      dest: /tmp/install_ohmyzsh.sh
+    when: not omzst.stat.exists
+    register: omzinstall_status
+
+  - name: Run ohmyzsh installer
+    command: sh /tmp/install_ohmyzsh.sh --unattended
+    register: ohmyzsh_result
+    failed_when: "'FAILED' in ohmyzsh_result.stderr"
+    when: not omzinstall_status.skipped
+
+  - name: Get stats on .zshrc file
+    ansible.builtin.stat:
+      path: "{{ ansible_env.HOME }}/.zshrc"
+    register: zsym
+
+  - name: Renaming default .zshrc file if not a symlink
+    command: mv "{{ ansible_env.HOME }}/.zshrc" "{{ ansible_env.HOME }}/.zshrc.orig"
+    when: zsym.stat.islnk is defined and zsym.stat.islnk == False
+
+  - name: Get stats on NVM directory
+    ansible.builtin.stat:
+      path: "{{ ansible_env.HOME }}/.nvm"
+    register: nvmst
+
+  - name: Download Node Version Manager (NVM)
+    git:
+      repo: "https://github.com/nvm-sh/nvm.git"
+      dest: "{{ ansible_env.HOME }}/.nvm"
+      clone: true
+    when: not nvmst.stat.exists
+    register: nvminstall_status
+
+  - name: Install latest Node LTS
+    shell: source "{{ ansible_env.HOME }}/.nvm/nvm.sh" && nvm install --lts
+    args:
+      executable: /bin/zsh
+    when: not nvminstall_status.skipped
+
+  - name: Get stats on tmux plugin manager
+    ansible.builtin.stat:
+      path: "{{ ansible_env.HOME }}/.config/tmux/plugins/tpm"
+    register: tpmst
+
+  - name: Download tmux plugin manager
+    git:
+      repo: "https://github.com/tmux-plugins/tpm"
+      dest: "{{ ansible_env.HOME }}/.config/tmux/plugins/tpm"
+      clone: true
+    when: not tpmst.stat.exists
