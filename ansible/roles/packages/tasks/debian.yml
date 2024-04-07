@@ -7,6 +7,7 @@
       - curl
       - duf
       - fd-find
+      - fontconfig
       - gcc # required for neovim/Mason
       - gpg
       - htop
