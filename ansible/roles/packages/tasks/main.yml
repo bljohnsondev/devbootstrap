@@ -1,0 +1,8 @@
+---
+- name: Install packages for Arch Linux
+  import_tasks: arch.yml
+  when: ansible_distribution == "Archlinux"
+
+- name: Install packages for Debian
+  import_tasks: debian.yml
+  when: ansible_distribution == "Debian"

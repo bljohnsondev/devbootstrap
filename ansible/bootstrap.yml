@@ -6,46 +6,9 @@
     ansible.builtin.package_facts:
       manager: auto
 
-  - name: Install term based packages for Arch Linux
-    become: yes
-    community.general.pacman:
-      name:
-        - bat
-        - curl
-        - duf
-        - dysk
-        - eza
-        - fd
-        - gcc # required for neovim/Mason
-        - htop
-        - jq
-        - lazygit
-        - most
-        - ncdu
-        - neovim
-        - rclone
-        - ripgrep
-        - rsync
-        - smartmontools
-        - sshfs
-        - tldr
-        - tmux
-        - ttf-firacode-nerd
-        - unzip
-        - wget
-        - zip
-        - zsh
-      state: present
-    when: ansible_distribution == "Archlinux"
-
-  - name: Install GUI based packages for Arch Linux
-    become: yes
-    community.general.pacman:
-      name:
-        - alacritty
-        - xclip
-      state: present
-    when: ansible_distribution == "Archlinux" and "xorg-server" in ansible_facts.packages
+  - name: Install packages
+    import_role:
+      name: packages
 
   - name: Set login shell of user {{ ansible_env.USER }} to `/bin/zsh`
     ansible.builtin.command: usermod --shell /bin/zsh {{ ansible_env.USER }}

@@ -1,0 +1,39 @@
+---
+- name: "[Arch Linux] Install term packages"
+  become: yes
+  community.general.pacman:
+    name:
+      - bat
+      - curl
+      - duf
+      - eza
+      - fd
+      - gcc # required for neovim/Mason
+      - htop
+      - jq
+      - lazygit
+      - most
+      - ncdu
+      - neovim
+      - rclone
+      - ripgrep
+      - rsync
+      - smartmontools
+      - sshfs
+      - tldr
+      - tmux
+      - ttf-firacode-nerd
+      - unzip
+      - wget
+      - zip
+      - zsh
+    state: present
+
+- name: "[Arch Linux] Install GUI packages"
+  become: yes
+  community.general.pacman:
+    name:
+      - alacritty
+      - xclip
+    state: present
+  when: ansible_distribution == "Archlinux" and "xorg-server" in ansible_facts.packages
