@@ -27,6 +27,15 @@
       - zsh
     state: present
 
+- name: "Debian : Install GUI packages"
+  become: true
+  ansible.builtin.apt:
+    name:
+      - alacritty
+      - xclip
+    state: present
+  when: "'xorg-server' in ansible_facts.packages"
+
 ##### EZA ######
 
 - name: "Debian : EZA key exists"
