@@ -22,3 +22,13 @@ export NVM_DIR="$HOME/.nvm"
 
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/completion.zsh
+
+# see distro specific rc settings
+if (( $+commands[apt-get] )); then
+  source ~/.config/zsh/debian.zsh
+fi
+
+# add any local config if it exists
+if [ -f $HOME/.config/zsh/loca.zsh ]; then
+  source ~/.config/zsh/local.zsh
+fi
