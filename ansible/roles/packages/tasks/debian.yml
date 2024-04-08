@@ -36,6 +36,27 @@
     state: present
   when: "'xorg-server' in ansible_facts.packages"
 
+- name: Check if Alacritty is already in terminfo
+  ansible.builtin.command: infocmp alacritty
+  register: infocmp_result
+  ignore_errors: true
+
+- name: Add Alacritty to TERM info
+  block:
+    - name: Git checkout of Ansible source
+      ansible.builtin.git:
+        repo: "https://github.com/alacritty/alacritty.git"
+        dest: /tmp/alacritty
+    - name: Adding Alacritty to terminfo
+      become: true
+      ansible.builtin.shell: tic -xe alacritty,alacritty-direct extra/alacritty.info
+      args:
+        chdir: /tmp/alacritty
+    - name: Removing Alacritty source
+      become: true
+      ansible.builtin.shell: rm -rf /tmp/alacritty
+  when: infocmp_result is failed
+
 ##### EZA ######
 
 - name: "Debian : EZA key exists"
