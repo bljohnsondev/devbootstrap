@@ -29,6 +29,6 @@ if (( $+commands[apt-get] )); then
 fi
 
 # add any local config if it exists
-if [ -f $HOME/.config/zsh/loca.zsh ]; then
+if [ -f $HOME/.config/zsh/local.zsh ]; then
   source ~/.config/zsh/local.zsh
 fi
