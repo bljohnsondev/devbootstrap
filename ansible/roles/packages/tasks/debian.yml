@@ -40,6 +40,7 @@
   ansible.builtin.command: infocmp alacritty
   register: infocmp_result
   ignore_errors: true
+  changed_when: false
 
 - name: Add Alacritty to TERM info
   block:
