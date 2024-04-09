@@ -73,9 +73,11 @@
       clone: true
     when: not tpmst.stat.exists
 
-#  - name: Running Dotbot install
-#    ansible.builtin.command: "{{ playbook_dir }}/../dotfiles/install"
-#    register: dotbot
-#    changed_when: false
+  - name: Running Dotbot install
+    ansible.builtin.command: "{{ playbook_dir }}/../dotfiles/install"
+    register: dotbot
+    changed_when: false
+    when: run_dotbot is defined and run_dotbot|bool
 
-#  - debug: var=dotbot.stdout_lines
+  - debug: var=dotbot.stdout_lines
+    when: run_dotbot is defined and run_dotbot|bool
