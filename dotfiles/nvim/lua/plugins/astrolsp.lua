@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
 -- Configuration documentation can be found with `:h astrolsp`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -12,7 +10,7 @@ return {
   opts = {
     -- Configuration table of features provided by AstroLSP
     features = {
-      autoformat = true, -- enable or disable auto formatting on start
+      autoformat = false, -- enable or disable auto formatting on start
       codelens = true, -- enable/disable codelens refresh on start
       inlay_hints = false, -- enable/disable inlay hints on start
       semantic_tokens = true, -- enable/disable semantic token highlighting
@@ -20,15 +18,7 @@ return {
     -- customize lsp formatting options
     formatting = {
       -- control auto formatting on save
-      format_on_save = {
-        enabled = true, -- enable or disable format on save globally
-        allow_filetypes = { -- enable format on save for specified filetypes only
-          -- "go",
-        },
-        ignore_filetypes = { -- disable format on save for specified filetypes
-          -- "python",
-        },
-      },
+      format_on_save = false,
       disabled = { -- disable formatting capabilities for the listed language servers
         -- disable lua_ls formatting capability if you want to use StyLua to format your lua code
         -- "lua_ls",
@@ -41,6 +31,15 @@ return {
     -- enable servers that you already have installed without mason
     servers = {
       -- "pyright"
+			--[[
+			tsserver = {
+			  on_attach = function(client)
+					-- this is important, otherwise tsserver will format ts/js
+					-- files which we *really* don't want.
+					client.server_capabilities.documentFormattingProvider = false
+				end,
+			},
+			--]]
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
