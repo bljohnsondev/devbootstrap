@@ -21,7 +21,7 @@
       - sshfs
       - tldr
       - tmux
-      - tmuxinator
+      - tmuxp
       - unzip
       - wget
       - zip

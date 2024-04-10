@@ -22,7 +22,7 @@
       - sshfs
       - tldr
       - tmux
-      - tmuxinator
+      - tmuxp
       - ttf-firacode-nerd
       - unzip
       - wget
