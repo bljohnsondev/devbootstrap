@@ -2,10 +2,6 @@
   hosts: localhost
  
   tasks:
-  - name: Gather the package facts
-    ansible.builtin.package_facts:
-      manager: auto
-
   - name: Install packages
     import_role:
       name: packages
