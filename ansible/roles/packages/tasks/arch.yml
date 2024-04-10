@@ -1,5 +1,5 @@
 ---
-- name: "Arch Linux : Install term packages"
+- name: "Install term packages"
   become: true
   community.general.pacman:
     name:
@@ -22,6 +22,7 @@
       - sshfs
       - tldr
       - tmux
+      - tmuxinator
       - ttf-firacode-nerd
       - unzip
       - wget
@@ -29,7 +30,7 @@
       - zsh
     state: present
 
-- name: "Arch Linux : Install GUI packages"
+- name: "Install GUI packages"
   become: true
   community.general.pacman:
     name:
