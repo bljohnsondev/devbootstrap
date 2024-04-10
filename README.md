@@ -7,7 +7,7 @@ This is my repository for bootstrapping my development environment.  It currentl
 
 It currently works with Arch Linux and Debian distributions.
 
-## First install the dependencies
+## Install the dependencies
 The only packages required are `git` and `ansible`.
 
 ## Install all the things
