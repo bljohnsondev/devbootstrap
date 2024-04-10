@@ -1,17 +1,4 @@
 ---
-# gathering package facts for Debian requires the python3-apt package
-- name: Install python3-apt if running Debian
-  become: true
-  ansible.builtin.apt:
-    name:
-      - python3-apt
-    state: present
-  when: ansible_distribution == "Debian"
-
-- name: Gather the package facts
-  ansible.builtin.package_facts:
-    manager: auto
-
 - name: Install packages for Arch Linux
   import_tasks: arch.yml
   when: ansible_distribution == "Archlinux"
