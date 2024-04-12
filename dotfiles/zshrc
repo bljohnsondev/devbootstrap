@@ -17,6 +17,9 @@ zstyle ':omz:update' mode disabled  # disable automatic updates
 
 source $ZSH/oh-my-zsh.sh
 
+# for tmux/tmuxp
+export DISABLE_AUTO_TITLE="true"
+
 # node version manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
