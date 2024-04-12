@@ -1,0 +1,14 @@
+session_name: project_name
+
+start_directory: ~/projects/project_name
+
+windows:
+  - window_name: editor
+    panes:
+      - nvim .
+
+  - window_name: servers
+    layout: even-horizontal
+    panes:
+      - echo "This is the frontend server"
+      - echo "This is the backend server"
