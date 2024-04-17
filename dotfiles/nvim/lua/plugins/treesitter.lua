@@ -28,6 +28,7 @@ return {
       "rust",
       "scss",
       "sql",
+      "styled",
       "svelte",
       "tsx",
       "twig",
