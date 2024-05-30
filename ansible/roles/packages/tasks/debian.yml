@@ -78,7 +78,7 @@
     - name: Removing Alacritty source
       become: true
       ansible.builtin.shell: rm -rf /tmp/alacritty
-  when: infocmp_result is failed
+  when: infocmp_result is failed and "'xorg-server' in ansible_facts.packages"
 
 ##### EZA ######
 
