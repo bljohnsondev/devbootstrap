@@ -28,7 +28,7 @@ return {
         "sqlls",
         "stylelint_lsp",
         "tailwindcss",
-        "tsserver",
+        "ts_ls",
         "yamlls",
       })
     end,

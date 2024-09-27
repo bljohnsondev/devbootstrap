@@ -10,7 +10,7 @@ return {
           ["Y"] = { "Y" },
 
           -- toggle zen mode
-          ["<leader>uz"] = { "<cmd>ZenMode<cr>", desc = "Zen Mode" },
+          ["<leader>zz"] = { "<cmd>ZenMode<cr>", desc = "Zen Mode" },
 
           -- tab/shift-tab to navigate buffers
           ["<Tab>"] = {

@@ -17,6 +17,7 @@ return {
       "jq",
       "jsdoc",
       "json",
+      "kdl",
       "lua",
       "markdown",
       "markdown_inline",
